@@ -11,7 +11,30 @@ class ImageGenView: NSView {
     
     var imageView = NSImageView()
     
-    var colors: [NSColor] {
+    var shapeType: ShapeType = .Squares {
+        didSet {
+            
+            refreshImage()
+        }
+    }
+    
+    var randomColor: Bool = true {
+        
+        didSet {
+            
+            refreshImage()
+        }
+    }
+    
+    var fill: Bool = true {
+        
+        didSet {
+            
+            refreshImage()
+        }
+    }
+    
+    var colors: [NSColor] = [] {
         
         didSet {
             
@@ -22,7 +45,6 @@ class ImageGenView: NSView {
     
     override init(frame frameRect: NSRect) {
         
-        self.colors = []
         super.init(frame: frameRect)
         
         setupView()
@@ -31,13 +53,10 @@ class ImageGenView: NSView {
     
     required init?(coder: NSCoder) {
         
-        self.colors = []
         super.init(coder: coder)
         
         setupView()
-        
-        
-        
+       
     }
     
     func setupView() {
@@ -55,8 +74,7 @@ class ImageGenView: NSView {
         imageView.layer?.borderColor = NSColor.lightGray.cgColor
         imageView.layer?.borderWidth = 2
         
-        imageView.image = ImageGen.generate(size: .init(width: 500, height: 500), colors: self.colors, fill: true)
-        
+        refreshImage()
         imageView.clipsToBounds = true
         imageView.frame = self.bounds.insetBy(dx: 10, dy: 10)
         self.addSubview(imageView)
@@ -66,7 +84,8 @@ class ImageGenView: NSView {
     
     func refreshImage() {
         
-        imageView.image = ImageGen.generate(size: .init(width: 500, height: 500), colors: self.colors, fill: true)
+        imageView.image = ImageGen.generate(shapeType: self.shapeType, size: .init(width: self.bounds.width, height: self.bounds.height), shapeFactor: 50, backgroundColor: NSColor.white, colors: self.colors, random: self.randomColor, fill: self.fill)
+        
     }
     
     

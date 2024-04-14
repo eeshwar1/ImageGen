@@ -40,7 +40,13 @@ class ViewController: NSViewController {
 
     @IBAction func addColorChanged(_ sender: NSColorWell) {
           
-        if !self.colors.contains(sender.color) {
+        
+        if !self.colors.contains(sender.color) && !matchColor(color: sender.color, colors: self.colors) {
+            
+            if self.colors.count > 10 {
+                
+                self.colors.remove(at: 0)
+            }
             self.colors.append(sender.color)
             colorTableView.reloadData()
         }
@@ -49,6 +55,19 @@ class ViewController: NSViewController {
             
     }
     
+    
+    func matchColor(color: NSColor, colors: [NSColor]) -> Bool {
+        
+        for currentColor in colors {
+            
+            if currentColor.isSimilar(to: color) {
+                
+                return true
+            }
+        }
+        
+        return false
+    }
     
     @IBAction func deleteColor(_ sender: NSButton) {
           
@@ -70,8 +89,38 @@ class ViewController: NSViewController {
         
     }
     
+    @IBAction func shapeTypeChanged(_ sender: NSPopUpButton) {
+        
+        if let selectedItem = sender.selectedItem {
+            
+            print("Selected Item: \(selectedItem.title)")
+            
+            if let shapeType = ShapeType(rawValue: selectedItem.title) {
+                
+                print("Shape Type: \(shapeType.rawValue)")
+                self.imageGenView.shapeType = shapeType
+            }
+        }
+        
     
+    }
+    
+    @IBAction func colorSequenceChanged(_ sender: NSButton) {
+        
 
+        self.imageGenView.randomColor = (sender.state == .on)
+       
+    
+    }
+    
+    @IBAction func colorFillChanged(_ sender: NSButton) {
+        
+
+        self.imageGenView.fill = (sender.state == .on)
+       
+    
+    }
+    
 }
 
 extension ViewController: NSTableViewDataSource {
@@ -123,24 +172,3 @@ extension ViewController: NSTableViewDelegate {
     
 }
 
-extension NSColor {
-    
-    func RGB() -> String {
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        // minimum decimal digit, eg: to display 2 as 2.00
-        formatter.minimumFractionDigits = 2
-        // maximum decimal digit, eg: to display 2.5021 as 2.50
-        formatter.maximumFractionDigits = 2
-        // round up 21.586 to 21.59. But doesn't round up 21.582, making it 21.58
-        formatter.roundingMode = .halfUp
-        
-        let redString = formatter.string(for: self.redComponent)!
-        let greenString = formatter.string(for: self.greenComponent)!
-        let blueString = formatter.string(for: self.blueComponent)!
-        let alphaString = formatter.string(for: self.alphaComponent)!
-        	
-        return "(\(redString),\(greenString),\(blueString),\(alphaString))"
-    }
-}
