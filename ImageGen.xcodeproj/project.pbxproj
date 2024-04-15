@@ -15,6 +15,7 @@
 		65AF370E2BCB296B0044AC03 /* VUAspectFillImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AF370D2BCB296B0044AC03 /* VUAspectFillImageView.swift */; };
 		65AF37102BCB690F0044AC03 /* ImageGen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AF370F2BCB690F0044AC03 /* ImageGen.swift */; };
 		65AF37122BCC56B70044AC03 /* NSColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AF37112BCC56B70044AC03 /* NSColor+Extension.swift */; };
+		65AF37142BCCC1460044AC03 /* NSImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AF37132BCCC1460044AC03 /* NSImage+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		65AF370D2BCB296B0044AC03 /* VUAspectFillImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUAspectFillImageView.swift; sourceTree = "<group>"; };
 		65AF370F2BCB690F0044AC03 /* ImageGen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGen.swift; sourceTree = "<group>"; };
 		65AF37112BCC56B70044AC03 /* NSColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Extension.swift"; sourceTree = "<group>"; };
+		65AF37132BCCC1460044AC03 /* NSImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				65AF370F2BCB690F0044AC03 /* ImageGen.swift */,
 				65AF370D2BCB296B0044AC03 /* VUAspectFillImageView.swift */,
 				653915722BC37D4600F61EC4 /* ViewController.swift */,
+				65AF37132BCCC1460044AC03 /* NSImage+Extension.swift */,
 				653915742BC37D4800F61EC4 /* Assets.xcassets */,
 				653915762BC37D4800F61EC4 /* Main.storyboard */,
 				653915792BC37D4800F61EC4 /* ImageGen.entitlements */,
@@ -146,6 +149,7 @@
 				653915802BC37DF100F61EC4 /* ImageGenView.swift in Sources */,
 				653915732BC37D4600F61EC4 /* ViewController.swift in Sources */,
 				65AF37122BCC56B70044AC03 /* NSColor+Extension.swift in Sources */,
+				65AF37142BCCC1460044AC03 /* NSImage+Extension.swift in Sources */,
 				65AF37102BCB690F0044AC03 /* ImageGen.swift in Sources */,
 				65AF370E2BCB296B0044AC03 /* VUAspectFillImageView.swift in Sources */,
 				653915712BC37D4600F61EC4 /* AppDelegate.swift in Sources */,

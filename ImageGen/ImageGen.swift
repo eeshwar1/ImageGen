@@ -22,11 +22,11 @@ class ImageGen {
         switch shapeType {
             
         case .Squares:
-            return generateSquares(size: .init(width: size.width, height: size.height), shapeFactor: 50, backgroundColor: NSColor.white, colors: colors, random: random, fill: fill)
+            return generateSquares(size: .init(width: size.width, height: size.height), shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, random: random, fill: fill)
         case .VerticalBars:
-            return generateBars(size: .init(width: size.width, height: size.height), shapeFactor: 50, backgroundColor: NSColor.white, colors: colors, vertical: true, random: random, fill: fill)
+            return generateBars(size: .init(width: size.width, height: size.height), shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, vertical: true, random: random, fill: fill)
         case .HorizontalBars:
-            return generateBars(size: .init(width: size.width, height: size.height), shapeFactor: 50, backgroundColor: NSColor.white, colors: colors, vertical: false, random: random, fill: fill)
+            return generateBars(size: .init(width: size.width, height: size.height), shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, vertical: false, random: random, fill: fill)
             
         }
     }

@@ -18,6 +18,14 @@ class ImageGenView: NSView {
         }
     }
     
+    var shapeFactor: CGFloat = 50.0 {
+        
+        didSet {
+            
+            refreshImage()
+        }
+    }
+    
     var randomColor: Bool = true {
         
         didSet {
@@ -84,11 +92,21 @@ class ImageGenView: NSView {
     
     func refreshImage() {
         
-        imageView.image = ImageGen.generate(shapeType: self.shapeType, size: .init(width: self.bounds.width, height: self.bounds.height), shapeFactor: 50, backgroundColor: NSColor.white, colors: self.colors, random: self.randomColor, fill: self.fill)
+        imageView.image = ImageGen.generate(shapeType: self.shapeType, size: .init(width: self.bounds.width, height: self.bounds.height), shapeFactor: self.shapeFactor, backgroundColor: NSColor.white, colors: self.colors, random: self.randomColor, fill: self.fill)
         
     }
     
-    
+    func getImage() -> NSImage? {
+        
+        if let image = imageView.image {
+            
+            return imageView.image
+        } else {
+            
+            return nil
+        }
+        
+    }
     
     
 }

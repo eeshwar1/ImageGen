@@ -15,6 +15,17 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var imageGenView: ImageGenView!
     
+    @IBOutlet weak var spinner: NSProgressIndicator!
+    
+    @IBOutlet weak var labelStatus: NSTextField!
+    
+    @IBOutlet weak var sliderShapeFactor: NSSlider!
+    
+    @IBOutlet weak var labelShapeFactor: NSTextField!
+    
+    let numberFormatter = NumberFormatter()
+   
+    
     override func viewWillAppear() {
         self.imageGenView.colors = self.colors
     }
@@ -28,8 +39,11 @@ class ViewController: NSViewController {
         
         colorTableView.reloadData()
         
-       
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 0
         
+        spinner.isHidden = true
+        labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenView.shapeFactor))!
     }
 
     override var representedObject: Any? {
@@ -93,11 +107,8 @@ class ViewController: NSViewController {
         
         if let selectedItem = sender.selectedItem {
             
-            print("Selected Item: \(selectedItem.title)")
-            
             if let shapeType = ShapeType(rawValue: selectedItem.title) {
                 
-                print("Shape Type: \(shapeType.rawValue)")
                 self.imageGenView.shapeType = shapeType
             }
         }
@@ -120,6 +131,69 @@ class ViewController: NSViewController {
        
     
     }
+    
+    @IBAction func shapeFactorSliderChanged(_ sender: NSSlider) {
+           
+         
+           
+         self.imageGenView.shapeFactor = sender.doubleValue
+         self.labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
+           
+    }
+    
+    
+    @IBAction func exportImage(_ sender: NSButton)  {
+        
+        if let image = self.imageGenView.imageView.image {
+            
+            let savePanel = NSSavePanel()
+            savePanel.canCreateDirectories = true
+            savePanel.showsTagField = false
+            savePanel.nameFieldStringValue = "ImageGen.png"
+            savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
+            
+            let result = savePanel.runModal()
+            if result.rawValue == NSApplication.ModalResponse.OK.rawValue  {
+                
+                if let fileUrl = savePanel.url {
+                    
+                    
+                    DispatchQueue.main.async {
+                        
+                        
+                        if image.pngWrite(to: fileUrl, options: .atomic) {
+                            
+                            self.labelStatus.stringValue = "Image exported successfully"
+                            self.labelStatus.textColor = NSColor.textColor
+                            
+                        } else {
+                            
+                            self.labelStatus.stringValue = "Error saving image"
+                            self.labelStatus.textColor = .red
+                        }
+                        self.spinner.stopAnimation(nil)
+                        self.spinner.isHidden = true
+                        
+                    }
+                    
+                    
+                    self.spinner.isHidden = false
+                    self.spinner.startAnimation(nil)
+                    self.labelStatus.stringValue = "Exporting..."
+                    
+                    
+                }
+            }
+            
+        } else {
+            
+            self.labelStatus.stringValue = "Nothing to export"
+        }
+        
+        
+    }
+
+    
     
 }
 
