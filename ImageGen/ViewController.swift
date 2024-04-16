@@ -9,7 +9,16 @@ import Cocoa
 
 class ViewController: NSViewController {
 
-    var colors: [NSColor] = [NSColor.red, NSColor.green, NSColor.blue]
+    var colors: [NSColor] = [NSColor.red, NSColor.green, NSColor.blue] {
+        
+        didSet {
+            
+            colorTableView.reloadData()
+            imageGenView.colors = colors
+        }
+    }
+    
+    
     
     @IBOutlet weak var colorTableView: NSTableView!
     
@@ -23,9 +32,10 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var labelShapeFactor: NSTextField!
     
+    @IBOutlet weak var imageView: VUDragDropImageView!
+    
     let numberFormatter = NumberFormatter()
    
-    
     override func viewWillAppear() {
         self.imageGenView.colors = self.colors
     }
@@ -44,6 +54,8 @@ class ViewController: NSViewController {
         
         spinner.isHidden = true
         labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenView.shapeFactor))!
+        
+        imageView.vc = self
     }
 
     override var representedObject: Any? {

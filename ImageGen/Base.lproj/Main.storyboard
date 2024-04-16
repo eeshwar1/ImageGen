@@ -988,13 +988,13 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5qK-mF-cJb">
+                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5qK-mF-cJb" customClass="VUDragDropImageView" customModule="ImageGen" customModuleProvider="target">
                                                         <rect key="frame" x="-3" y="27" width="206" height="206"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="200" id="Gda-0l-QYX"/>
                                                             <constraint firstAttribute="height" constant="200" id="fKu-67-Bcg"/>
                                                         </constraints>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="86P-hd-xe6"/>
+                                                        <imageCell key="cell" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="86P-hd-xe6"/>
                                                     </imageView>
                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YTI-VY-9aV">
                                                         <rect key="frame" x="-7" y="-7" width="108" height="32"/>
@@ -1061,6 +1061,7 @@
                     <connections>
                         <outlet property="colorTableView" destination="mLE-xi-TfE" id="qK5-NB-jpD"/>
                         <outlet property="imageGenView" destination="RIM-1t-b45" id="GAD-bo-0TG"/>
+                        <outlet property="imageView" destination="5qK-mF-cJb" id="gMF-ES-2q4"/>
                         <outlet property="labelShapeFactor" destination="kO6-D9-g9v" id="sgm-fv-lLJ"/>
                         <outlet property="labelStatus" destination="5m9-Gc-Orb" id="7fH-TK-lWv"/>
                         <outlet property="sliderShapeFactor" destination="5ds-m8-PkL" id="dZ6-3i-bJc"/>
