@@ -100,7 +100,8 @@ class ImageGenView: NSView {
         
         if let image = imageView.image {
             
-            return imageView.image
+            return image
+            
         } else {
             
             return nil
