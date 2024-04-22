@@ -226,6 +226,10 @@ class ViewController: NSViewController {
         
     }
 
+    @IBAction func typeSelected(_ sender: NSButton) {
+        
+        
+    }
     
 }
 
