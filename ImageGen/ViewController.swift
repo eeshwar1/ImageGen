@@ -204,8 +204,28 @@ class ViewController: NSViewController {
         
         
     }
-
     
+    
+    @IBAction func openImage(_ sender: Any) {
+        
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseDirectories = false
+        openPanel.allowedContentTypes = [.image]
+        
+        let response = openPanel.runModal()
+        
+        if response == .OK {
+            
+            if let image = NSImage(contentsOf: openPanel.urls[0]) {
+                
+                self.imageView.image = image
+            }
+            
+        }
+        
+    }
+
     
 }
 
