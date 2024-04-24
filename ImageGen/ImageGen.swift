@@ -7,9 +7,11 @@
 
 import Cocoa
 
-enum ShapeType: String {
+enum ShapeType: String, CaseIterable {
     
     case Squares = "Squares"
+    case Circles = "Circles"
+    case Triangles = "Triangles"
     case VerticalBars = "Vertical Bars"
     case HorizontalBars = "Horizontal Bars"
     
@@ -21,17 +23,18 @@ class ImageGen {
         
         switch shapeType {
             
-        case .Squares:
-            return generateSquares(size: .init(width: size.width, height: size.height), shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, random: random, fill: fill)
-        case .VerticalBars:
-            return generateBars(size: .init(width: size.width, height: size.height), shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, vertical: true, random: random, fill: fill)
-        case .HorizontalBars:
-            return generateBars(size: .init(width: size.width, height: size.height), shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, vertical: false, random: random, fill: fill)
+        case .Squares, .Circles, .Triangles:
+            return generateShapes(size: .init(width: size.width, height: size.height), shapeType: shapeType, shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, random: random, fill: fill)
+        case .VerticalBars, .HorizontalBars:
+            return generateBars(size: .init(width: size.width, height: size.height), shapeType: shapeType, shapeFactor: shapeFactor, backgroundColor: NSColor.white, colors: colors, vertical: false, random: random, fill: fill)
+  
+            
             
         }
     }
     
-    static func generateSquares(size: NSSize, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool) -> NSImage {
+    
+    static func generateShapes(size: NSSize, shapeType: ShapeType, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool) -> NSImage {
         
         guard colors.count > 0 else { return NSImage(size: size) }
         
@@ -69,19 +72,19 @@ class ImageGen {
                         
                         if CGFloat(xPos) + shapeWidth <= size.width {
                             
-                            let smallRect = NSBezierPath(rect: NSRect(x: xPos, y: yPos, width: shapeWidth, height: shapeHeight))
+                            let path = getPath(shapeType: shapeType, position: NSPoint(x: xPos, y: yPos), width: shapeWidth, height: shapeHeight)
                             xOffset += spacing
-                            smallRect.lineWidth = 2
+                            path.lineWidth = 2
                             
                             if fill {
                                 
                                 colors[colorIdx].set()
-                                smallRect.fill()
+                                path.fill()
                                 
                             } else {
                                 
                                 colors[colorIdx].setStroke()
-                                smallRect.stroke()
+                                path.stroke()
                             }
                           
                             
@@ -111,18 +114,51 @@ class ImageGen {
         
     }
     
-    static func generateBars(size: NSSize, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], vertical: Bool, random: Bool, fill: Bool) -> NSImage {
+    private static func getPath(shapeType: ShapeType, position: NSPoint, width: CGFloat, height: CGFloat) -> NSBezierPath {
+        
+        var path = NSBezierPath()
+        
+        let shapeRect = NSRect(x: position.x, y: position.y, width: width, height: height)
+        
+        switch shapeType {
+        case .Squares:
+            path = NSBezierPath(rect: shapeRect )
+        case .Circles:
+            path = NSBezierPath(ovalIn: shapeRect)
+        case .Triangles:
+            path.move(to: NSPoint(x: shapeRect.midX, y: shapeRect.minY))
+            path.line(to: NSPoint(x: shapeRect.maxX, y: shapeRect.maxY))
+            path.line(to: NSPoint(x: shapeRect.minX, y: shapeRect.maxY))
+            path.close()
+            
+        default:
+            path = NSBezierPath(rect: shapeRect)
+        }
+        
+        path.lineWidth = 2
+        
+        return path
+    }
+    
+    
+    
+    static func generateBars(size: NSSize, shapeType: ShapeType, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], vertical: Bool, random: Bool, fill: Bool) -> NSImage {
     
         guard colors.count > 0 else { return NSImage(size: size) }
         
         
-        if vertical {
+        switch shapeType {
+    
+        case .VerticalBars:
             
             return generateVerticalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill)
             
-        } else {
+        case .HorizontalBars:
             
             return generateHorizontalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill)
+        default:
+            return generateHorizontalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill)
+            
         }
     }
     
@@ -268,5 +304,9 @@ class ImageGen {
         })
         
     }
+    
+  
+    
+   
 
 }

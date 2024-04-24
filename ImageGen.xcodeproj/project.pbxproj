@@ -90,7 +90,6 @@
 			children = (
 				65A0A77E2BCEE81600652C44 /* DominantColors */,
 				653915702BC37D4600F61EC4 /* AppDelegate.swift */,
-				65AF37112BCC56B70044AC03 /* NSColor+Extension.swift */,
 				6539157F2BC37DF100F61EC4 /* ImageGenView.swift */,
 				65A0A75E2BCE1F1800652C44 /* VUDragDropImageView.swift */,
 				65AF370F2BCB690F0044AC03 /* ImageGen.swift */,
@@ -119,6 +118,7 @@
 		65A0A78B2BCEE8BA00652C44 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				65AF37112BCC56B70044AC03 /* NSColor+Extension.swift */,
 				65A0A7932BCEE91100652C44 /* Helpers.swift */,
 				65A0A7842BCEE8BA00652C44 /* CGColor+Extension.swift */,
 				65A0A7852BCEE8BA00652C44 /* CGFloatExtensions.swift */,

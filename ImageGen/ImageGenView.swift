@@ -11,10 +11,12 @@ class ImageGenView: NSView {
     
     var imageView = NSImageView()
     
+    var autoGenerate: Bool = true
+    
     var shapeType: ShapeType = .Squares {
         didSet {
             
-            refreshImage()
+            refreshImageAuto()
         }
     }
     
@@ -22,7 +24,8 @@ class ImageGenView: NSView {
         
         didSet {
             
-            refreshImage()
+            refreshImageAuto()
+
         }
     }
     
@@ -30,7 +33,8 @@ class ImageGenView: NSView {
         
         didSet {
             
-            refreshImage()
+            refreshImageAuto()
+
         }
     }
     
@@ -38,7 +42,7 @@ class ImageGenView: NSView {
         
         didSet {
             
-            refreshImage()
+            refreshImageAuto()
         }
     }
     
@@ -46,7 +50,8 @@ class ImageGenView: NSView {
         
         didSet {
             
-            refreshImage()
+            refreshImageAuto()
+
         }
         
     }
@@ -90,6 +95,14 @@ class ImageGenView: NSView {
         
     }
     
+    func refreshImageAuto() {
+        
+        if autoGenerate {
+            
+            refreshImage()
+        }
+        
+    }
     func refreshImage() {
         
         imageView.image = ImageGen.generate(shapeType: self.shapeType, size: .init(width: self.bounds.width, height: self.bounds.height), shapeFactor: self.shapeFactor, backgroundColor: NSColor.white, colors: self.colors, random: self.randomColor, fill: self.fill)

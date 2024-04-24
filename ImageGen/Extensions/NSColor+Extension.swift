@@ -44,4 +44,12 @@ extension NSColor {
         
         return false
     }
+    
+    static func random() -> NSColor {
+        
+        return NSColor(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1), alpha: .random(in: 0...1))
+        
+        
+    }
+    
 }

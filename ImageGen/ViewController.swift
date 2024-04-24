@@ -9,7 +9,7 @@ import Cocoa
 
 class ViewController: NSViewController {
 
-    var colors: [NSColor] = [NSColor.red, NSColor.green, NSColor.blue] {
+    var colors: [NSColor] = [] {
         
         didSet {
             
@@ -32,7 +32,16 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var labelShapeFactor: NSTextField!
     
+    @IBOutlet weak var popupButtonShapeType: NSPopUpButton!
+    
     @IBOutlet weak var imageView: VUDragDropImageView!
+    
+    @IBOutlet weak var buttonOpenImage: NSButton!
+    
+    @IBOutlet weak var colorWell: NSColorWell!
+    
+    @IBOutlet weak var radioColors: NSButton!
+    @IBOutlet weak var radioImage: NSButton!
     
     let numberFormatter = NumberFormatter()
    
@@ -43,6 +52,8 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        randomColors()
         
         colorTableView.delegate = self
         colorTableView.dataSource = self
@@ -56,6 +67,18 @@ class ViewController: NSViewController {
         labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenView.shapeFactor))!
         
         imageView.vc = self
+        
+        radioColors.state = .on
+        imageView.isEnabled = false
+        buttonOpenImage.isEnabled = false
+        colorWell.isEnabled = true
+        
+        popupButtonShapeType.removeAllItems()
+        
+        for type in ShapeType.allCases {
+            
+            popupButtonShapeType.addItem(withTitle: type.rawValue)
+        }
     }
 
     override var representedObject: Any? {
@@ -115,6 +138,31 @@ class ViewController: NSViewController {
         
     }
     
+    
+    @IBAction func randomColor(_ sender: NSButton) {
+          
+       
+        randomColors()
+        
+    }
+    
+    func randomColors() {
+        
+        self.colors.removeAll()
+        
+        for _ in 0...10 {
+            
+            self.colors.append(NSColor.random())
+        }
+    }
+    
+    @IBAction func generateImage(_ sender: NSButton) {
+          
+        self.imageGenView.refreshImage()
+        
+        
+    }
+    
     @IBAction func shapeTypeChanged(_ sender: NSPopUpButton) {
         
         if let selectedItem = sender.selectedItem {
@@ -140,6 +188,14 @@ class ViewController: NSViewController {
         
 
         self.imageGenView.fill = (sender.state == .on)
+       
+    
+    }
+    
+    @IBAction func autoGenerateChanged(_ sender: NSButton) {
+        
+
+        self.imageGenView.autoGenerate = (sender.state == .on)
        
     
     }
@@ -228,6 +284,17 @@ class ViewController: NSViewController {
 
     @IBAction func typeSelected(_ sender: NSButton) {
         
+        if sender.title == "Colors" {
+            
+            imageView.isEnabled = false
+            buttonOpenImage.isEnabled = false
+            colorWell.isEnabled = true
+        } else {
+            
+            imageView.isEnabled = true
+            buttonOpenImage.isEnabled = true
+            colorWell.isEnabled = false
+        }
         
     }
     
