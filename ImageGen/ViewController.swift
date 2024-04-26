@@ -22,7 +22,7 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var colorTableView: NSTableView!
     
-    @IBOutlet weak var imageGenView: ImageGenView!
+    @IBOutlet weak var imageGenView: VUImageGenView!
     
     @IBOutlet weak var spinner: NSProgressIndicator!
     
@@ -32,16 +32,21 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var labelShapeFactor: NSTextField!
     
+    @IBOutlet weak var labelMeldingFactor: NSTextField!
+    
     @IBOutlet weak var popupButtonShapeType: NSPopUpButton!
     
     @IBOutlet weak var imageView: VUDragDropImageView!
     
     @IBOutlet weak var buttonOpenImage: NSButton!
+    @IBOutlet weak var buttonRandomColor: NSButton!
     
     @IBOutlet weak var colorWell: NSColorWell!
     
     @IBOutlet weak var radioColors: NSButton!
     @IBOutlet weak var radioImage: NSButton!
+    
+    @IBOutlet weak var popupButtonSize: NSPopUpButton!
     
     let numberFormatter = NumberFormatter()
    
@@ -66,6 +71,8 @@ class ViewController: NSViewController {
         spinner.isHidden = true
         labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenView.shapeFactor))!
         
+        labelMeldingFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenView.meldingFactor))!
+        
         imageView.vc = self
         
         radioColors.state = .on
@@ -78,6 +85,13 @@ class ViewController: NSViewController {
         for type in ShapeType.allCases {
             
             popupButtonShapeType.addItem(withTitle: type.rawValue)
+        }
+        
+        popupButtonSize.removeAllItems()
+        
+        for size in ImageSize.allCases {
+            
+            popupButtonSize.addItem(withTitle: size.rawValue)
         }
     }
 
@@ -104,6 +118,12 @@ class ViewController: NSViewController {
             
     }
     
+    @IBAction func backgroundColorChanged(_ sender: NSColorWell) {
+          
+        
+        self.imageGenView.backgroundColor = sender.color
+            
+    }
     
     func matchColor(color: NSColor, colors: [NSColor]) -> Bool {
         
@@ -117,27 +137,6 @@ class ViewController: NSViewController {
         
         return false
     }
-    
-    @IBAction func deleteColor(_ sender: NSButton) {
-          
-        if colorTableView.selectedRowIndexes.count > 0 {
-            
-            let idx = colorTableView.selectedRowIndexes.first!
-            
-            self.colors.remove(at: idx)
-            
-            colorTableView.reloadData()
-            
-            self.imageGenView.colors = self.colors
-            
-        } else {
-            
-            print("Nothing selected to delete")
-        }
-        
-        
-    }
-    
     
     @IBAction func randomColor(_ sender: NSButton) {
           
@@ -176,6 +175,19 @@ class ViewController: NSViewController {
     
     }
     
+    @IBAction func imageSizeChanged(_ sender: NSPopUpButton) {
+        
+        if let selectedItem = sender.selectedItem {
+            
+            if let imageSize = ImageSize(rawValue: selectedItem.title) {
+                
+                self.imageGenView.imageSize = imageSize
+            }
+        }
+        
+    
+    }
+    
     @IBAction func colorSequenceChanged(_ sender: NSButton) {
         
 
@@ -202,10 +214,15 @@ class ViewController: NSViewController {
     
     @IBAction func shapeFactorSliderChanged(_ sender: NSSlider) {
            
-         
-           
-         self.imageGenView.shapeFactor = sender.doubleValue
+       self.imageGenView.shapeFactor = sender.doubleValue
          self.labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
+           
+    }
+    
+    @IBAction func meldingFactorSliderChanged(_ sender: NSSlider) {
+           
+       self.imageGenView.meldingFactor = sender.doubleValue
+       self.labelMeldingFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
            
     }
     
@@ -289,11 +306,13 @@ class ViewController: NSViewController {
             imageView.isEnabled = false
             buttonOpenImage.isEnabled = false
             colorWell.isEnabled = true
+            buttonRandomColor.isEnabled = true
         } else {
             
             imageView.isEnabled = true
             buttonOpenImage.isEnabled = true
             colorWell.isEnabled = false
+            buttonRandomColor.isEnabled = false
         }
         
     }

@@ -7,9 +7,16 @@
 
 import Cocoa
 
-class ImageGenView: NSView {
+class VUImageGenView: NSView {
     
     var imageView = NSImageView()
+    
+    var imageSize: ImageSize = ._800x600 {
+        didSet {
+            
+            refreshImageAuto()
+        }
+    }
     
     var autoGenerate: Bool = true
     
@@ -29,6 +36,15 @@ class ImageGenView: NSView {
         }
     }
     
+    var meldingFactor: CGFloat = 1.0 {
+        
+        didSet {
+            
+            refreshImageAuto()
+
+        }
+    }
+    
     var randomColor: Bool = true {
         
         didSet {
@@ -37,6 +53,8 @@ class ImageGenView: NSView {
 
         }
     }
+    
+    
     
     var fill: Bool = true {
         
@@ -47,6 +65,16 @@ class ImageGenView: NSView {
     }
     
     var colors: [NSColor] = [] {
+        
+        didSet {
+            
+            refreshImageAuto()
+
+        }
+        
+    }
+    
+    var backgroundColor: NSColor = .white {
         
         didSet {
             
@@ -90,6 +118,7 @@ class ImageGenView: NSView {
         refreshImage()
         imageView.clipsToBounds = true
         imageView.frame = self.bounds.insetBy(dx: 10, dy: 10)
+        imageView.imageScaling = .scaleProportionallyDown
         self.addSubview(imageView)
         
         
@@ -105,7 +134,9 @@ class ImageGenView: NSView {
     }
     func refreshImage() {
         
-        imageView.image = ImageGen.generate(shapeType: self.shapeType, size: .init(width: self.bounds.width, height: self.bounds.height), shapeFactor: self.shapeFactor, backgroundColor: NSColor.white, colors: self.colors, random: self.randomColor, fill: self.fill)
+        imageView.image = VUImageGen.generate(shapeType: self.shapeType, imageSize: imageSize, shapeFactor: self.shapeFactor, meldingFactor: self.meldingFactor,
+                                              backgroundColor: backgroundColor, colors: self.colors,
+                                              random: self.randomColor, fill: self.fill)
         
     }
     

@@ -25,7 +25,7 @@ extension NSColor {
         let blueString = formatter.string(for: self.blueComponent)!
         let alphaString = formatter.string(for: self.alphaComponent)!
             
-        return "(\(redString),\(greenString),\(blueString),\(alphaString))"
+        return "(r:\(redString), g:\(greenString), b:\(blueString), a:\(alphaString))"
     }
     
     func isSimilar(to otherColor: NSColor) -> Bool {
