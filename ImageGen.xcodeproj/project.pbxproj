@@ -11,7 +11,6 @@
 		653915732BC37D4600F61EC4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653915722BC37D4600F61EC4 /* ViewController.swift */; };
 		653915752BC37D4800F61EC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 653915742BC37D4800F61EC4 /* Assets.xcassets */; };
 		653915782BC37D4800F61EC4 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 653915772BC37D4800F61EC4 /* Base */; };
-		653915802BC37DF100F61EC4 /* VUImageGenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6539157F2BC37DF100F61EC4 /* VUImageGenView.swift */; };
 		65A0A75F2BCE1F1800652C44 /* VUDragDropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0A75E2BCE1F1800652C44 /* VUDragDropImageView.swift */; };
 		65A0A77F2BCEE81600652C44 /* DeltaEFormula.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0A7792BCEE81600652C44 /* DeltaEFormula.swift */; };
 		65A0A7802BCEE81600652C44 /* DominantColorAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0A77A2BCEE81600652C44 /* DominantColorAlgorithm.swift */; };
@@ -36,7 +35,6 @@
 		653915742BC37D4800F61EC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		653915772BC37D4800F61EC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		653915792BC37D4800F61EC4 /* ImageGen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ImageGen.entitlements; sourceTree = "<group>"; };
-		6539157F2BC37DF100F61EC4 /* VUImageGenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUImageGenView.swift; sourceTree = "<group>"; };
 		65A0A75E2BCE1F1800652C44 /* VUDragDropImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUDragDropImageView.swift; sourceTree = "<group>"; };
 		65A0A7792BCEE81600652C44 /* DeltaEFormula.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeltaEFormula.swift; sourceTree = "<group>"; };
 		65A0A77A2BCEE81600652C44 /* DominantColorAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DominantColorAlgorithm.swift; sourceTree = "<group>"; };
@@ -86,7 +84,6 @@
 			children = (
 				65A0A77E2BCEE81600652C44 /* DominantColors */,
 				653915702BC37D4600F61EC4 /* AppDelegate.swift */,
-				6539157F2BC37DF100F61EC4 /* VUImageGenView.swift */,
 				65AF370F2BCB690F0044AC03 /* VUImageGen.swift */,
 				65A0A75E2BCE1F1800652C44 /* VUDragDropImageView.swift */,
 				653915722BC37D4600F61EC4 /* ViewController.swift */,
@@ -195,7 +192,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				653915802BC37DF100F61EC4 /* VUImageGenView.swift in Sources */,
 				653915732BC37D4600F61EC4 /* ViewController.swift in Sources */,
 				65AF37122BCC56B70044AC03 /* NSColor+Extension.swift in Sources */,
 				65A0A7942BCEE91100652C44 /* Helpers.swift in Sources */,

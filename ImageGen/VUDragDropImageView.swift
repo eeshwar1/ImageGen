@@ -12,6 +12,7 @@ class VUDragDropImageView: NSImageView {
     
     var vc: ViewController?
     
+  
     override var image: NSImage? {
         
         didSet {

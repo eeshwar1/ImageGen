@@ -8,21 +8,24 @@
 import Cocoa
 
 class ViewController: NSViewController {
-
-    var colors: [NSColor] = [] 
+    
+    var colors: [NSColor] = []
     {
         
         didSet {
             
             colorTableView.reloadData()
-            imageGenView.colors = colors
+            self.imageGenerator.colors = colors
+            refreshImage()
         }
     }
     
-
+    
     @IBOutlet weak var colorTableView: NSTableView!
     
-    @IBOutlet weak var imageGenView: VUImageGenView!
+    @IBOutlet weak var imageView: NSImageView!
+    
+    var imageGenerator = VUImageGen()
     
     @IBOutlet weak var spinner: NSProgressIndicator!
     
@@ -36,7 +39,7 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var popupButtonShapeType: NSPopUpButton!
     
-    @IBOutlet weak var imageView: VUDragDropImageView!
+    @IBOutlet weak var inputImageView: VUDragDropImageView!
     
     @IBOutlet weak var buttonOpenImage: NSButton!
     @IBOutlet weak var buttonRandomColor: NSButton!
@@ -51,14 +54,22 @@ class ViewController: NSViewController {
     @IBOutlet weak var popupButtonGradientType: NSPopUpButton!
     
     let numberFormatter = NumberFormatter()
-   
+    
     override func viewWillAppear() {
-        self.imageGenView.colors = self.colors
+        
+        self.imageGenerator.colors = self.colors
     }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+       
+        imageView.wantsLayer = true
+        imageView.layer?.borderColor = NSColor.lightGray.cgColor
+        imageView.layer?.borderWidth = 2
+        
+        imageView.clipsToBounds = true
+        imageView.imageScaling = .scaleProportionallyDown
         
         randomColors()
         
@@ -71,47 +82,48 @@ class ViewController: NSViewController {
         numberFormatter.maximumFractionDigits = 0
         
         spinner.isHidden = true
-        labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenView.shapeFactor))!
         
-        labelMeldingFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenView.meldingFactor))!
+        labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenerator.shapeFactor))!
         
-        imageView.vc = self
+        labelMeldingFactor.stringValue = numberFormatter.string(from: NSNumber(value:self.imageGenerator.meldingFactor))!
+        
         
         radioColors.state = .on
-        imageView.isEnabled = false
+        inputImageView.isEnabled = false
+        inputImageView.vc = self
         buttonOpenImage.isEnabled = false
         colorWell.isEnabled = true
         
         popupButtonShapeType.removeAllItems()
         
-        for type in ShapeType.allCases {
+        for type in VUImageGen.ShapeType.allCases {
             
             popupButtonShapeType.addItem(withTitle: type.rawValue)
         }
         
         popupButtonGradientType.removeAllItems()
         
-        for type in GradientType.allCases {
+        for type in VUImageGen.GradientType.allCases {
             
             popupButtonGradientType.addItem(withTitle: type.rawValue)
         }
         
         popupButtonSize.removeAllItems()
         
-        for size in ImageSize.allCases {
+        for size in VUImageGen.ImageSize.allCases {
             
             popupButtonSize.addItem(withTitle: size.rawValue)
         }
     }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
+    
+    func refreshImage() {
+     
+        self.imageView.image = self.imageGenerator.image
+        
     }
-
+    
     @IBAction func addColorChanged(_ sender: NSColorWell) {
-          
+        
         
         if !self.colors.contains(sender.color) && !matchColor(color: sender.color, colors: self.colors) {
             
@@ -123,15 +135,15 @@ class ViewController: NSViewController {
             colorTableView.reloadData()
         }
         
-        self.imageGenView.colors = self.colors
-            
+        
     }
     
     @IBAction func backgroundColorChanged(_ sender: NSColorWell) {
-          
         
-        self.imageGenView.backgroundColor = sender.color
-            
+        
+        self.imageGenerator.backgroundColor = sender.color
+        self.refreshImage()
+        
     }
     
     func matchColor(color: NSColor, colors: [NSColor]) -> Bool {
@@ -148,8 +160,8 @@ class ViewController: NSViewController {
     }
     
     @IBAction func randomColor(_ sender: NSButton) {
-          
-       
+        
+        
         randomColors()
         
     }
@@ -168,9 +180,9 @@ class ViewController: NSViewController {
     }
     
     @IBAction func generateImage(_ sender: NSButton) {
-          
-        self.imageGenView.refreshImage()
         
+        self.imageGenerator.refreshImage()
+        self.refreshImage()
         
     }
     
@@ -178,91 +190,97 @@ class ViewController: NSViewController {
         
         if let selectedItem = sender.selectedItem {
             
-            if let shapeType = ShapeType(rawValue: selectedItem.title) {
+            if let shapeType = VUImageGen.ShapeType(rawValue: selectedItem.title) {
                 
-                self.imageGenView.shapeType = shapeType
+                self.imageGenerator.shapeType = shapeType
+                refreshImage()
             }
         }
         
-    
+        
     }
     
     @IBAction func imageSizeChanged(_ sender: NSPopUpButton) {
         
         if let selectedItem = sender.selectedItem {
             
-            if let imageSize = ImageSize(rawValue: selectedItem.title) {
+            if let imageSize = VUImageGen.ImageSize(rawValue: selectedItem.title) {
                 
-                self.imageGenView.imageSize = imageSize
+                self.imageGenerator.imageSize = imageSize
+                refreshImage()
             }
         }
         
-    
+        
     }
     
     @IBAction func colorSequenceChanged(_ sender: NSButton) {
         
-
-        self.imageGenView.randomColor = (sender.state == .on)
-       
-    
+        
+        self.imageGenerator.randomColor = (sender.state == .on)
+        self.refreshImage()
+        
+        
     }
     
     @IBAction func colorFillChanged(_ sender: NSButton) {
         
-
-        self.imageGenView.fill = (sender.state == .on)
-       
-    
+        
+        self.imageGenerator.fill = (sender.state == .on)
+        self.refreshImage()
+        
     }
     
     @IBAction func colorFillGradientChanged(_ sender: NSButton) {
         
-
-        self.imageGenView.gradient = (sender.state == .on)
-       
-    
+        
+        self.imageGenerator.gradient = (sender.state == .on)
+        self.refreshImage()
+        
+        
     }
     
     @IBAction func gradientTypeChanged(_ sender: NSPopUpButton) {
         
         if let selectedItem = sender.selectedItem {
             
-            if let gradientType = GradientType(rawValue: selectedItem.title) {
+            if let gradientType = VUImageGen.GradientType(rawValue: selectedItem.title) {
                 
-                self.imageGenView.gradientType = gradientType
+                self.imageGenerator.gradientType = gradientType
+                self.refreshImage()
             }
         }
         
-    
+        
     }
     
     @IBAction func autoGenerateChanged(_ sender: NSButton) {
         
-
-        self.imageGenView.autoGenerate = (sender.state == .on)
-       
-    
+        
+        self.imageGenerator.autoGenerate = (sender.state == .on)
+        
+        
     }
     
     @IBAction func shapeFactorSliderChanged(_ sender: NSSlider) {
-           
-       self.imageGenView.shapeFactor = sender.doubleValue
-         self.labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
-           
+        
+        self.imageGenerator.shapeFactor = sender.doubleValue
+        self.labelShapeFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
+        self.refreshImage()
+        
     }
     
     @IBAction func meldingFactorSliderChanged(_ sender: NSSlider) {
-           
-       self.imageGenView.meldingFactor = sender.doubleValue
-       self.labelMeldingFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
-           
+        
+        self.imageGenerator.meldingFactor = sender.doubleValue
+        self.labelMeldingFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
+        self.refreshImage()
     }
     
     
     @IBAction func exportImage(_ sender: NSButton)  {
         
-        if let image = self.imageGenView.imageView.image {
+        if let image = self.imageView.image {
             
             let savePanel = NSSavePanel()
             savePanel.canCreateDirectories = true
@@ -325,24 +343,25 @@ class ViewController: NSViewController {
             
             if let image = NSImage(contentsOf: openPanel.urls[0]) {
                 
-                self.imageView.image = image
+                self.inputImageView.image = image
+                
             }
             
         }
         
     }
-
+    
     @IBAction func typeSelected(_ sender: NSButton) {
         
         if sender.title == "Colors" {
             
-            imageView.isEnabled = false
+            inputImageView.isEnabled = false
             buttonOpenImage.isEnabled = false
             colorWell.isEnabled = true
             buttonRandomColor.isEnabled = true
         } else {
             
-            imageView.isEnabled = true
+            inputImageView.isEnabled = true
             buttonOpenImage.isEnabled = true
             colorWell.isEnabled = false
             buttonRandomColor.isEnabled = false
@@ -363,7 +382,7 @@ extension ViewController: NSTableViewDataSource {
 extension ViewController: NSTableViewDelegate {
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    
+        
         
         var text: String = ""
         var cellIdentifier: String = ""
@@ -374,7 +393,7 @@ extension ViewController: NSTableViewDelegate {
         {
             text = ""
             cellIdentifier = "Color"
-        
+            
         }
         if tableColumn == tableView.tableColumns[1]
         {
@@ -386,15 +405,16 @@ extension ViewController: NSTableViewDelegate {
         {
             text=color.RGB()
             cellIdentifier = "ColorRGB"
-        
+            
         }
         
-       
-      
+        
+        
         
         if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView
         {
             cell.textField?.stringValue = text
+            cell.textField?.font = .monospacedSystemFont(ofSize: 12, weight: .light)
             if cellIdentifier == "Color" {
                 
                 cell.wantsLayer = true

@@ -11,94 +11,8 @@ class VUImageGenView: NSView {
     
     var imageView = NSImageView()
     
-    var imageSize: ImageSize = ._800x600 {
-        didSet {
-            
-            refreshImageAuto()
-        }
-    }
+    var imageGenerator = VUImageGen()
     
-    var autoGenerate: Bool = true
-    
-    var shapeType: ShapeType = .Squares {
-        didSet {
-            
-            refreshImageAuto()
-        }
-    }
-    
-    var shapeFactor: CGFloat = 50.0 {
-        
-        didSet {
-            
-            refreshImageAuto()
-
-        }
-    }
-    
-    var meldingFactor: CGFloat = 1.0 {
-        
-        didSet {
-            
-            refreshImageAuto()
-
-        }
-    }
-    
-    var randomColor: Bool = true {
-        
-        didSet {
-            
-            refreshImageAuto()
-
-        }
-    }
-    
-    
-    
-    var fill: Bool = true {
-        
-        didSet {
-            
-            refreshImageAuto()
-        }
-    }
-    
-    var gradient: Bool = true {
-        
-        didSet {
-            
-            refreshImageAuto()
-        }
-    }
-    
-    var gradientType: GradientType = .linear {
-        
-        didSet {
-            
-            refreshImageAuto()
-        }
-    }
-    
-    var colors: [NSColor] = [] {
-        
-        didSet {
-            
-            refreshImageAuto()
-
-        }
-        
-    }
-    
-    var backgroundColor: NSColor = .white {
-        
-        didSet {
-            
-            refreshImageAuto()
-
-        }
-        
-    }
     
     override init(frame frameRect: NSRect) {
         
@@ -126,33 +40,24 @@ class VUImageGenView: NSView {
     
     func setupSubViews() {
         
-        imageView.imageScaling = .scaleProportionallyDown
         imageView.wantsLayer = true
         imageView.layer?.borderColor = NSColor.lightGray.cgColor
         imageView.layer?.borderWidth = 2
         
-        refreshImage()
         imageView.clipsToBounds = true
         imageView.frame = self.bounds.insetBy(dx: 10, dy: 10)
         imageView.imageScaling = .scaleProportionallyDown
         self.addSubview(imageView)
         
+        refreshImage()
         
     }
     
-    func refreshImageAuto() {
-        
-        if autoGenerate {
-            
-            refreshImage()
-        }
-        
-    }
+    
+    
     func refreshImage() {
         
-        imageView.image = VUImageGen.generate(shapeType: self.shapeType, imageSize: imageSize, shapeFactor: self.shapeFactor, meldingFactor: self.meldingFactor,
-                                              backgroundColor: backgroundColor, colors: self.colors,
-                                              random: self.randomColor, fill: self.fill, gradient: gradient, gradientType: gradientType)
+        self.imageView.image = self.imageGenerator.image
         
     }
     

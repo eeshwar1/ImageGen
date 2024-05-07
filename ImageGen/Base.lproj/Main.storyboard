@@ -719,13 +719,14 @@
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t4U-lI-EaJ">
                                                 <rect key="frame" x="0.0" y="256" width="800" height="664"/>
                                                 <subviews>
-                                                    <customView clipsToBounds="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RIM-1t-b45" customClass="VUImageGenView" customModule="ImageGen" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="64" width="800" height="600"/>
+                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tes-Xd-HTR">
+                                                        <rect key="frame" x="-3" y="61" width="806" height="606"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="800" id="Sbd-gb-j1A"/>
-                                                            <constraint firstAttribute="height" constant="600" id="mXQ-73-Tqx"/>
+                                                            <constraint firstAttribute="height" constant="600" id="NPu-JB-6nf"/>
+                                                            <constraint firstAttribute="width" constant="800" id="dBi-uT-bAl"/>
                                                         </constraints>
-                                                    </customView>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="gEC-eF-toD"/>
+                                                    </imageView>
                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5jE-TW-nQ3">
                                                         <rect key="frame" x="0.0" y="34" width="236" height="20"/>
                                                         <subviews>
@@ -1361,8 +1362,8 @@
                         <outlet property="buttonRandomColor" destination="kWw-8C-q5R" id="MbD-1U-HjQ"/>
                         <outlet property="colorTableView" destination="mLE-xi-TfE" id="qK5-NB-jpD"/>
                         <outlet property="colorWell" destination="2eb-su-g2H" id="eab-ft-dOu"/>
-                        <outlet property="imageGenView" destination="RIM-1t-b45" id="GAD-bo-0TG"/>
-                        <outlet property="imageView" destination="5qK-mF-cJb" id="gMF-ES-2q4"/>
+                        <outlet property="imageView" destination="tes-Xd-HTR" id="rjn-If-zmc"/>
+                        <outlet property="inputImageView" destination="5qK-mF-cJb" id="m5d-C0-ql6"/>
                         <outlet property="labelMeldingFactor" destination="Arf-hh-JES" id="xtW-jr-gl6"/>
                         <outlet property="labelShapeFactor" destination="kO6-D9-g9v" id="sgm-fv-lLJ"/>
                         <outlet property="labelStatus" destination="5m9-Gc-Orb" id="7fH-TK-lWv"/>
