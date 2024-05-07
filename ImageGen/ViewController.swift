@@ -9,7 +9,8 @@ import Cocoa
 
 class ViewController: NSViewController {
 
-    var colors: [NSColor] = [] {
+    var colors: [NSColor] = [] 
+    {
         
         didSet {
             
@@ -18,8 +19,7 @@ class ViewController: NSViewController {
         }
     }
     
-    
-    
+
     @IBOutlet weak var colorTableView: NSTableView!
     
     @IBOutlet weak var imageGenView: VUImageGenView!
@@ -47,6 +47,8 @@ class ViewController: NSViewController {
     @IBOutlet weak var radioImage: NSButton!
     
     @IBOutlet weak var popupButtonSize: NSPopUpButton!
+    
+    @IBOutlet weak var popupButtonGradientType: NSPopUpButton!
     
     let numberFormatter = NumberFormatter()
    
@@ -85,6 +87,13 @@ class ViewController: NSViewController {
         for type in ShapeType.allCases {
             
             popupButtonShapeType.addItem(withTitle: type.rawValue)
+        }
+        
+        popupButtonGradientType.removeAllItems()
+        
+        for type in GradientType.allCases {
+            
+            popupButtonGradientType.addItem(withTitle: type.rawValue)
         }
         
         popupButtonSize.removeAllItems()
@@ -147,12 +156,15 @@ class ViewController: NSViewController {
     
     func randomColors() {
         
-        self.colors.removeAll()
+        var newColors: [NSColor] = []
         
-        for _ in 0...10 {
+        for _ in 1...10 {
             
-            self.colors.append(NSColor.random())
+            newColors.append(NSColor.random())
+            
         }
+        self.colors = newColors
+        
     }
     
     @IBAction func generateImage(_ sender: NSButton) {
@@ -201,6 +213,27 @@ class ViewController: NSViewController {
 
         self.imageGenView.fill = (sender.state == .on)
        
+    
+    }
+    
+    @IBAction func colorFillGradientChanged(_ sender: NSButton) {
+        
+
+        self.imageGenView.gradient = (sender.state == .on)
+       
+    
+    }
+    
+    @IBAction func gradientTypeChanged(_ sender: NSPopUpButton) {
+        
+        if let selectedItem = sender.selectedItem {
+            
+            if let gradientType = GradientType(rawValue: selectedItem.title) {
+                
+                self.imageGenView.gradientType = gradientType
+            }
+        }
+        
     
     }
     
@@ -337,25 +370,36 @@ extension ViewController: NSTableViewDelegate {
         
         let color = self.colors[row]
         
-        
         if tableColumn == tableView.tableColumns[0]
+        {
+            text = ""
+            cellIdentifier = "Color"
+        
+        }
+        if tableColumn == tableView.tableColumns[1]
         {
             text = color.accessibilityName
             cellIdentifier = "ColorName"
             
         }
-        if tableColumn == tableView.tableColumns[1]
+        if tableColumn == tableView.tableColumns[2]
         {
             text=color.RGB()
             cellIdentifier = "ColorRGB"
         
         }
+        
        
       
         
         if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView
         {
             cell.textField?.stringValue = text
+            if cellIdentifier == "Color" {
+                
+                cell.wantsLayer = true
+                cell.layer?.backgroundColor = color.cgColor
+            }
             return cell
         }
         else

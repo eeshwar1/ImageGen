@@ -25,7 +25,6 @@
 		65A0A7902BCEE8BA00652C44 /* CIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0A7882BCEE8BA00652C44 /* CIImage+Extension.swift */; };
 		65A0A7912BCEE8BA00652C44 /* NSImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0A7892BCEE8BA00652C44 /* NSImage+Extension.swift */; };
 		65A0A7942BCEE91100652C44 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A0A7932BCEE91100652C44 /* Helpers.swift */; };
-		65AF370E2BCB296B0044AC03 /* VUAspectFillImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AF370D2BCB296B0044AC03 /* VUAspectFillImageView.swift */; };
 		65AF37102BCB690F0044AC03 /* VUImageGen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AF370F2BCB690F0044AC03 /* VUImageGen.swift */; };
 		65AF37122BCC56B70044AC03 /* NSColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AF37112BCC56B70044AC03 /* NSColor+Extension.swift */; };
 /* End PBXBuildFile section */
@@ -51,7 +50,6 @@
 		65A0A7882BCEE8BA00652C44 /* CIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CIImage+Extension.swift"; sourceTree = "<group>"; };
 		65A0A7892BCEE8BA00652C44 /* NSImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSImage+Extension.swift"; sourceTree = "<group>"; };
 		65A0A7932BCEE91100652C44 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
-		65AF370D2BCB296B0044AC03 /* VUAspectFillImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUAspectFillImageView.swift; sourceTree = "<group>"; };
 		65AF370F2BCB690F0044AC03 /* VUImageGen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUImageGen.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		65AF37112BCC56B70044AC03 /* NSColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -91,7 +89,6 @@
 				6539157F2BC37DF100F61EC4 /* VUImageGenView.swift */,
 				65AF370F2BCB690F0044AC03 /* VUImageGen.swift */,
 				65A0A75E2BCE1F1800652C44 /* VUDragDropImageView.swift */,
-				65AF370D2BCB296B0044AC03 /* VUAspectFillImageView.swift */,
 				653915722BC37D4600F61EC4 /* ViewController.swift */,
 				65A0A78B2BCEE8BA00652C44 /* Extensions */,
 				653915742BC37D4800F61EC4 /* Assets.xcassets */,
@@ -207,7 +204,6 @@
 				65A0A7912BCEE8BA00652C44 /* NSImage+Extension.swift in Sources */,
 				65AF37102BCB690F0044AC03 /* VUImageGen.swift in Sources */,
 				65A0A7812BCEE81600652C44 /* DominantColorQuality.swift in Sources */,
-				65AF370E2BCB296B0044AC03 /* VUAspectFillImageView.swift in Sources */,
 				65A0A7902BCEE8BA00652C44 /* CIImage+Extension.swift in Sources */,
 				65A0A77F2BCEE81600652C44 /* DeltaEFormula.swift in Sources */,
 				65A0A78F2BCEE8BA00652C44 /* CGSizeExtensions.swift in Sources */,

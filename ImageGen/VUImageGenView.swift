@@ -64,6 +64,22 @@ class VUImageGenView: NSView {
         }
     }
     
+    var gradient: Bool = true {
+        
+        didSet {
+            
+            refreshImageAuto()
+        }
+    }
+    
+    var gradientType: GradientType = .linear {
+        
+        didSet {
+            
+            refreshImageAuto()
+        }
+    }
+    
     var colors: [NSColor] = [] {
         
         didSet {
@@ -136,7 +152,7 @@ class VUImageGenView: NSView {
         
         imageView.image = VUImageGen.generate(shapeType: self.shapeType, imageSize: imageSize, shapeFactor: self.shapeFactor, meldingFactor: self.meldingFactor,
                                               backgroundColor: backgroundColor, colors: self.colors,
-                                              random: self.randomColor, fill: self.fill)
+                                              random: self.randomColor, fill: self.fill, gradient: gradient, gradientType: gradientType)
         
     }
     

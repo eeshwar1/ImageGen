@@ -18,6 +18,12 @@ enum ShapeType: String, CaseIterable {
     
 }
 
+enum GradientType: String, CaseIterable {
+    
+    case linear = "Linear"
+    case radial = "Radial"
+}
+
 enum ImageSize: String, CaseIterable {
     
     case _800x600 = "800 x 600"
@@ -38,7 +44,7 @@ enum ImageSize: String, CaseIterable {
 
 class VUImageGen {
     
-    static func generate(shapeType: ShapeType, imageSize: ImageSize, shapeFactor: CGFloat, meldingFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool) -> NSImage {
+    static func generate(shapeType: ShapeType, imageSize: ImageSize, shapeFactor: CGFloat, meldingFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool, gradient: Bool, gradientType: GradientType) -> NSImage {
         
         
         let size = imageSize.getSize()
@@ -46,13 +52,13 @@ class VUImageGen {
         switch shapeType {
             
         case .Squares, .Circles, .Triangles, .Stars:
-            return generateShapes(size: .init(width: size.width, height: size.height), shapeType: shapeType, 
+            return generateShapes(size: NSSize(width: size.width, height: size.height), shapeType: shapeType,
                                   shapeFactor: shapeFactor, meldingFactor: meldingFactor, backgroundColor: backgroundColor, colors: colors,
-                                  random: random, fill: fill)
+                                  random: random, fill: fill, gradient: gradient, gradientType: gradientType)
         case .VerticalBars, .HorizontalBars:
-            return generateBars(size: .init(width: size.width, height: size.height), shapeType: shapeType, 
+            return generateBars(size: NSSize(width: size.width, height: size.height), shapeType: shapeType,
                                 shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors,
-                                vertical: false, random: random, fill: fill)
+                                vertical: false, random: random, fill: fill, gradient: gradient, gradientType: gradientType)
             
             
             
@@ -60,7 +66,7 @@ class VUImageGen {
     }
     
     
-    static func generateShapes(size: NSSize, shapeType: ShapeType, shapeFactor: CGFloat, meldingFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool) -> NSImage {
+    static func generateShapes(size: NSSize, shapeType: ShapeType, shapeFactor: CGFloat, meldingFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool, gradient: Bool, gradientType: GradientType) -> NSImage {
         
         guard colors.count > 0 else { return NSImage(size: size) }
         
@@ -74,7 +80,7 @@ class VUImageGen {
             let shapeWidth = CGFloat(size.width/shapeFactor)
             let shapeHeight = shapeWidth
             
-            let spacing = CGFloat(size.width/(2.5 * shapeFactor))
+            let spacing = CGFloat(size.width/(2.5 * meldingFactor * shapeFactor))
             var xOffset: CGFloat = spacing
             var yOffset: CGFloat = spacing
             var xPos: CGFloat = 0.0
@@ -88,27 +94,62 @@ class VUImageGen {
             for ridx in 0...rowsOfShapes {
                 
                 yPos = CGFloat(ridx) * shapeHeight + yOffset
-                xOffset = spacing
+                xOffset = 0
                 
-                if CGFloat(yPos) + shapeHeight <= size.height
-                    
+                let endY = CGFloat(yPos) + shapeHeight
+                if  endY <= size.height || ((endY - size.height) < shapeHeight)
+                        
                 {
                     for cidx in 0...colsOfShapes {
                         
                         xPos = CGFloat(cidx) * shapeWidth + xOffset
                         
-                        if CGFloat(xPos) + shapeWidth <= size.width {
+                        let endX = CGFloat(xPos) + shapeWidth
+                        if endX <= size.width || ((endX - size.width) < shapeWidth) {
                             
                             let path = getPath(shapeType: shapeType, position: NSPoint(x: xPos, y: yPos),
-                                               width: shapeWidth, height: shapeHeight, meldingFactor: meldingFactor)
+                                               width: shapeWidth, height: shapeHeight)
                             xOffset += spacing
                             path.lineWidth = 1
+                            
                             
                             if fill {
                                 
                                 colors[colorIdx].set()
-                                path.stroke()
-                                path.fill()
+                                
+                                if gradient {
+                                    
+                                    let currentColor = colors[colorIdx]
+                                    
+                                    
+                                    // Create a gradient from white to currentColor
+                                    let colors: [CGFloat] = [
+                                        
+                                        1.0, 1.0, 1.0, 1.0,
+                                        currentColor.redComponent, currentColor.greenComponent, currentColor.blueComponent, currentColor.alphaComponent
+                                        
+                                    ]
+                                    
+                                    
+                                    
+                                    if let context = NSGraphicsContext.current?.cgContext {
+                                        
+                                        let baseSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
+                                        
+                                        let gradient: CGGradient = CGGradient(colorSpace: baseSpace, colorComponents: colors, locations: nil , count: 2)!
+                                        
+                                        fillGradientInShape(context: context, gradient: gradient, gradientType: gradientType, path: path)
+                                        
+                                    }
+                                    
+                                    
+                                } else  {
+                                    
+                                    colors[colorIdx].set()
+                                    path.fill()
+                                    
+                                }
+                                
                                 
                             } else {
                                 
@@ -122,6 +163,7 @@ class VUImageGen {
                                 colorIdx = Int.random(in: 0..<colors.count)
                                 
                             } else {
+                                
                                 colorIdx += 1
                                 
                                 if colorIdx >= colors.count {
@@ -143,11 +185,62 @@ class VUImageGen {
         
     }
     
-    private static func getPath(shapeType: ShapeType, position: NSPoint, width: CGFloat, height: CGFloat, meldingFactor: CGFloat) -> NSBezierPath {
+    private static func fillGradientInShape(context: CGContext, gradient: CGGradient, gradientType: GradientType, vertical: Bool = true, path: NSBezierPath) {
+        
+        
+        context.saveGState()
+        
+        let cgPath = path.cgPath
+        
+        context.addPath(cgPath)
+        context.clip(using: .winding)
+        
+        let shapeRect = path.bounds
+        
+        if gradientType == .linear {
+            
+            var startPoint = CGPointMake(shapeRect.minX, shapeRect.midY)
+            var endPoint = CGPointMake(shapeRect.maxX, shapeRect.midY)
+            
+            if vertical {
+                startPoint = CGPointMake(shapeRect.midX, shapeRect.minY)
+                endPoint = CGPointMake(shapeRect.midX, shapeRect.maxY)
+            }
+           
+            
+            context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: CGGradientDrawingOptions.drawsBeforeStartLocation)
+            
+            
+        } else {
+            
+            let startCenter = CGPointMake(shapeRect.midX, shapeRect.midY)
+            
+            let endCenter = CGPointMake(shapeRect.midX, shapeRect.midY)
+            
+            let startRadius = 0.0
+            
+            var endRadius = shapeRect.width
+            if vertical {
+                endRadius = shapeRect.height
+            }
+           
+            
+            context.drawRadialGradient(gradient, startCenter: startCenter, startRadius: startRadius, endCenter: endCenter, endRadius: endRadius, options: .drawsBeforeStartLocation)
+        }
+        
+        context.restoreGState()
+        
+        context.addPath(cgPath)
+        context.strokePath()
+        
+        
+    }
+    
+    private static func getPath(shapeType: ShapeType, position: NSPoint, width: CGFloat, height: CGFloat) -> NSBezierPath {
         
         var path = NSBezierPath()
         
-        let shapeRect = NSRect(x: position.x, y: position.y, width: width * meldingFactor, height: height * meldingFactor)
+        let shapeRect = NSRect(x: position.x, y: position.y, width: width, height: height)
         
         switch shapeType {
         case .Squares:
@@ -160,9 +253,9 @@ class VUImageGen {
             path.line(to: NSPoint(x: shapeRect.minX, y: shapeRect.maxY))
             path.close()
         case .Stars:
-          path = getStarPath(rect: shapeRect)
+            path = getStarPath(rect: shapeRect)
             
-         default:
+        default:
             path = NSBezierPath(rect: shapeRect)
         }
         
@@ -173,7 +266,7 @@ class VUImageGen {
     
     static func getStarPath(rect: NSRect, corners: Int = 5) -> NSBezierPath {
         
-  //      let corners: Int = 10
+        //      let corners: Int = 10
         let smoothness: Double = 0.45
         
         // draw from the center of our rectangle
@@ -235,7 +328,7 @@ class VUImageGen {
         
         path.close()
         let unusedSpace = (rect.height / 2 - bottomEdge) / 2
-       
+        
         // create and apply a transform that moves our path down by that amount, centering the shape vertically
         // also tranform by origin coordinates of the position rectange passed to ensure the star is within the required bounds
         
@@ -248,7 +341,7 @@ class VUImageGen {
         
     }
     
-    static func generateBars(size: NSSize, shapeType: ShapeType, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], vertical: Bool, random: Bool, fill: Bool) -> NSImage {
+    static func generateBars(size: NSSize, shapeType: ShapeType, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], vertical: Bool, random: Bool, fill: Bool, gradient: Bool, gradientType: GradientType) -> NSImage {
         
         guard colors.count > 0 else { return NSImage(size: size) }
         
@@ -257,20 +350,20 @@ class VUImageGen {
             
         case .VerticalBars:
             
-            return generateVerticalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill)
+            return generateVerticalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill, gradient: gradient, gradientType: gradientType)
             
         case .HorizontalBars:
             
-            return generateHorizontalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill)
+            return generateHorizontalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill, gradient: gradient, gradientType: gradientType)
         default:
-            return generateHorizontalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill)
+            return generateHorizontalBars(size: size, shapeFactor: shapeFactor, backgroundColor: backgroundColor, colors: colors, random: random, fill: fill, gradient: gradient, gradientType: gradientType)
             
         }
     }
     
     
     
-    static func generateVerticalBars(size: NSSize, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool) -> NSImage {
+    static func generateVerticalBars(size: NSSize, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool, gradient: Bool, gradientType: GradientType) -> NSImage {
         
         guard colors.count > 0 else { return NSImage(size: size) }
         
@@ -302,12 +395,41 @@ class VUImageGen {
                     
                     let path = NSBezierPath(rect: NSRect(x: xPos, y: 0, width: shapeWidth, height: shapeHeight))
                     xOffset += spacing
-                    path.lineWidth = 2
+                    path.lineWidth = 1
                     
                     if fill {
                         
-                        colors[colorIdx].set()
-                        path.fill()
+                        if gradient {
+                            
+                            let currentColor = colors[colorIdx]
+                            
+                            
+                            // Create a gradient from white to currentColor
+                            let colors: [CGFloat] = [
+                                
+                                1.0, 1.0, 1.0, 1.0,
+                                currentColor.redComponent, currentColor.greenComponent, currentColor.blueComponent, currentColor.alphaComponent
+                                
+                            ]
+                            
+                            
+                            if let context = NSGraphicsContext.current?.cgContext {
+                                
+                                let baseSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
+                                
+                                let gradient: CGGradient = CGGradient(colorSpace: baseSpace, colorComponents: colors, locations: nil , count: 2)!
+                                
+                                fillGradientInShape(context: context, gradient: gradient, gradientType: gradientType, vertical: true, path: path)
+                                
+                            }
+                            
+                            
+                        } else {
+                            
+                            colors[colorIdx].set()
+                            path.fill()
+                            
+                        }
                         
                     } else {
                         
@@ -342,7 +464,7 @@ class VUImageGen {
     }
     
     
-    static func generateHorizontalBars(size: NSSize, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool) -> NSImage {
+    static func generateHorizontalBars(size: NSSize, shapeFactor: CGFloat, backgroundColor: NSColor, colors: [NSColor], random: Bool, fill: Bool, gradient: Bool, gradientType: GradientType) -> NSImage {
         
         
         return NSImage(size: size,
@@ -370,19 +492,50 @@ class VUImageGen {
                 
                 if CGFloat(yPos) + shapeHeight <= size.height {
                     
-                    let smallRect = NSBezierPath(rect: NSRect(x: 0, y: yPos, width: shapeWidth, height: shapeHeight))
+                    let path = NSBezierPath(rect: NSRect(x: 0, y: yPos, width: shapeWidth, height: shapeHeight))
                     yOffset += spacing
-                    smallRect.lineWidth = 2
+                    path.lineWidth = 1
                     
                     if fill {
                         
-                        colors[colorIdx].set()
-                        smallRect.fill()
+                        
+                        if gradient {
+                            
+                            let currentColor = colors[colorIdx]
+                            
+                            
+                            // Create a gradient from white to currentColor
+                            let colors: [CGFloat] = [
+                                
+                                1.0, 1.0, 1.0, 1.0,
+                                currentColor.redComponent, currentColor.greenComponent, currentColor.blueComponent, currentColor.alphaComponent
+                                
+                            ]
+                            
+                            
+                            if let context = NSGraphicsContext.current?.cgContext {
+                                
+                                let baseSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
+                                
+                                let gradient: CGGradient = CGGradient(colorSpace: baseSpace, colorComponents: colors, locations: nil , count: 2)!
+                                
+                                fillGradientInShape(context: context, gradient: gradient, gradientType: gradientType, vertical: false, path: path)
+                                
+                            }
+                            
+                            
+                        } else {
+                            
+                            colors[colorIdx].set()
+                            path.fill()
+                            
+                        }
+                        
                         
                     } else {
                         
                         colors[colorIdx].setStroke()
-                        smallRect.stroke()
+                        path.stroke()
                     }
                     
                     
